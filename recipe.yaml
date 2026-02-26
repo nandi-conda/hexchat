@@ -2,6 +2,10 @@ package:
   name: hexchat
   version: 2.16.2
 
+build:
+  number: 4
+  string: cpu_baseline_py314
+
 source:
   url: https://github.com/hexchat/hexchat/archive/refs/tags/v2.16.2.tar.gz
   sha256: 486d73cdb6a89fa91cfbe242107901d06e777bea25956a7786c4a831a2caa0e3
