@@ -41,6 +41,8 @@ build:
 
 requirements:
   build:
+    - ${{ compiler('c') }}
+    - ${{ compiler('cxx') }}
     - pkg-config
     - meson
     - ninja
@@ -55,6 +57,7 @@ requirements:
     - gdk-pixbuf
     - python
     - zlib
+    - expat
   run:
     - glib
     - gtk2
