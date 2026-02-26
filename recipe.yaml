@@ -7,8 +7,8 @@ source:
   sha256: 486d73cdb6a89fa91cfbe242107901d06e777bea25956a7786c4a831a2caa0e3
 
 build:
-  number: 4
-  string: cpu_baseline_py314
+  number: 5
+  string: cpu_baseline_nocompiler
   script:
     - meson setup build -Dwith-lua='false' -Dwith-perl='false' -Dwith-python='false' -Dwith-sysinfo=false -Dtext-frontend=true -Ddbus=disabled -Dlibcanberra=disabled --prefix=$PREFIX
     - ninja -C build install || true
@@ -42,8 +42,6 @@ build:
 
 requirements:
   build:
-    - ${{ compiler('c') }}
-    - ${{ compiler('cxx') }}
     - pkg-config
     - meson
     - ninja
