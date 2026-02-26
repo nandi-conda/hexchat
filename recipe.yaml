@@ -9,8 +9,8 @@ source:
 build:
   number: 3
   script:
-    - export CFLAGS="-O2 -pipe -march=generic"
-    - export CXXFLAGS="-O2 -pipe -march=generic"
+    - export CFLAGS="-O2 -pipe -march=x86-64"
+    - export CXXFLAGS="-O2 -pipe -march=x86-64"
     - meson setup build -Dwith-lua='false' -Dwith-perl='false' -Dwith-python='false' -Dwith-sysinfo=false -Dtext-frontend=true -Ddbus=disabled -Dlibcanberra=disabled --prefix=$PREFIX
     - ninja -C build install || true
     - mkdir -p "$PREFIX/Menu"
