@@ -46,7 +46,8 @@ jobs:
             echo "No built package found in output/linux-64"
             exit 1
           fi
-          rattler-build upload prefix --channel "$CHANNEL_NAME" --skip-existing "${PKGS[@]}"
+          echo "Uploading: ${PKGS[@]}"
+          rattler-build upload prefix --channel "$CHANNEL_NAME" "${PKGS[@]}"
 
       - name: Upload built artifact to GitHub Actions
         uses: actions/upload-artifact@v4
