@@ -1,0 +1,59 @@
+name: Build and publish conda package
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master, main]
+    paths:
+      - recipe.yaml
+      - .github/workflows/build-and-publish.yml
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    env:
+      CHANNEL_NAME: nandi-testing
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pixi
+        uses: prefix-dev/setup-pixi@v0.8.1
+        with:
+          pixi-version: latest
+
+      - name: Install rattler-build
+        run: |
+          pixi global install rattler-build
+          echo "$HOME/.pixi/bin" >> "$GITHUB_PATH"
+
+      - name: Build package
+        run: |
+          rattler-build build --recipe recipe.yaml --output-dir ./output
+
+      - name: Authenticate to prefix.dev
+        env:
+          PREFIX_API_KEY: ${{ secrets.PREFIX_API_KEY }}
+        run: |
+          if [ -z "$PREFIX_API_KEY" ]; then
+            echo "Missing required secret: PREFIX_API_KEY"
+            exit 1
+          fi
+          rattler-build auth login prefix.dev --token "$PREFIX_API_KEY"
+
+      - name: Upload package to channel
+        run: |
+          shopt -s nullglob
+          PKGS=(output/linux-64/*.conda)
+          if [ ${#PKGS[@]} -eq 0 ]; then
+            echo "No built package found in output/linux-64"
+            exit 1
+          fi
+          rattler-build upload prefix --channel "$CHANNEL_NAME" --skip-existing "${PKGS[@]}"
+
+      - name: Upload built artifact to GitHub Actions
+        uses: actions/upload-artifact@v4
+        with:
+          name: conda-packages
+          path: output/linux-64/*.conda

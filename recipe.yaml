@@ -1,0 +1,73 @@
+package:
+  name: hexchat
+  version: 2.16.2
+
+source:
+  url: https://github.com/hexchat/hexchat/archive/refs/tags/v2.16.2.tar.gz
+  sha256: 486d73cdb6a89fa91cfbe242107901d06e777bea25956a7786c4a831a2caa0e3
+
+build:
+  number: 2
+  script:
+    - meson setup build -Dwith-lua='false' -Dwith-perl='false' -Dwith-python='false' -Dwith-sysinfo=false -Dtext-frontend=true -Ddbus=disabled -Dlibcanberra=disabled --prefix=$PREFIX
+    - ninja -C build install
+    - mkdir -p "$PREFIX/Menu"
+    - cp "$PREFIX/share/icons/hicolor/48x48/apps/io.github.Hexchat.png" "$PREFIX/Menu/icon.png"
+    - |
+      cat > "$PREFIX/Menu/hexchat_menu.json" <<'EOF'
+      {
+        "$schema": "https://schemas.conda.org/menuinst/menuinst-1-1-0.schema.json",
+        "menu_name": "HexChat",
+        "menu_items": [
+          {
+            "name": "HexChat",
+            "description": "IRC Client",
+            "icon": "{{ MENU_DIR }}/icon.{{ ICON_EXT }}",
+            "activate": false,
+            "command": [""],
+            "platforms": {
+              "linux": {
+                "command": ["{{ PREFIX }}/bin/hexchat", "%U"],
+                "Categories": ["Network", "IRCClient"],
+                "MimeType": ["x-scheme-handler/irc", "x-scheme-handler/ircs"],
+                "StartupNotify": true,
+                "StartupWMClass": "Hexchat"
+              }
+            }
+          }
+        ]
+      }
+      EOF
+
+requirements:
+  build:
+    - pkg-config
+    - meson
+    - ninja
+    - intltool
+    - perl
+    - perl-xml-parser
+  host:
+    - glib
+    - gtk2
+    - openssl
+    - pango
+    - gdk-pixbuf
+    - python
+  run:
+    - glib
+    - gtk2
+    - openssl
+    - pango
+    - gdk-pixbuf
+    - enchant
+    - aspell
+
+tests:
+  - script:
+      - hexchat --version
+
+about:
+  summary: A popular and easy to use graphical IRC (chat) client
+  repository: https://github.com/hexchat/hexchat.git
+  license: GPL-2.0-or-later
