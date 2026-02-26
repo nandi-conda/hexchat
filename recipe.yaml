@@ -54,6 +54,7 @@ requirements:
     - pango
     - gdk-pixbuf
     - python
+    - zlib
   run:
     - glib
     - gtk2
