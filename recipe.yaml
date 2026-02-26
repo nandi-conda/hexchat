@@ -58,6 +58,8 @@ requirements:
     - python
     - zlib
     - expat
+    - xorg-xproto
+    - xorg-libx11
   run:
     - glib
     - gtk2
