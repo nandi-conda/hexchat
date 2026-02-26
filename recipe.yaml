@@ -58,7 +58,7 @@ requirements:
     - python
     - zlib
     - expat
-    - xorg-xproto
+    - xorgproto
     - xorg-libx11
   run:
     - glib
