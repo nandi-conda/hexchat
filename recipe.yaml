@@ -54,7 +54,7 @@ requirements:
     - openssl
     - pango
     - gdk-pixbuf
-    - python
+    - python >=3.10
     - zlib
     - expat
     - xorg-xorgproto
